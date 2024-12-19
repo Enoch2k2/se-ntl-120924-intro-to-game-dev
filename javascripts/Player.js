@@ -8,6 +8,8 @@ class Player {
     this.speed = 2
     this.facing = 'up'
     this.moving = false
+    this.canFire = true
+    this.fireRate = 250
   }
 
   update() {
@@ -37,7 +39,9 @@ class Player {
     ctx.fillRect(this.x, this.y, this.width, this.height)
   }
 
-  
+  fireDelay() {
+    this.canFire = true
+  }
 
   setup() {
     document.addEventListener('keydown', function(event){
@@ -57,6 +61,58 @@ class Player {
         case D_BUTTON:
           this.moving = true
           this.facing = 'right'
+          break
+        case SPACEBAR:
+          // want to display a laserbeam
+          if(this.facing == 'up') {
+            if(this.canFire) {
+              const offset = 4
+              const lbWidth = 7
+              const lbHeight = 20
+              const lbColor = "green"
+              const lbX = this.x + (this.width/2) - (lbWidth/2)
+              const lbY = this.y - offset -  lbHeight
+              new Laserbeam(lbX, lbY, lbWidth, lbHeight, lbColor, this.facing)
+              this.canFire = false
+              setTimeout(this.fireDelay.bind(this), this.fireRate)
+            }
+          } else if(this.facing == 'down') {
+            if(this.canFire) {
+              const offset = 4
+              const lbWidth = 7
+              const lbHeight = 20
+              const lbColor = "green"
+              const lbX = this.x + (this.width/2) - (lbWidth/2)
+              const lbY = this.y + this.height + offset
+              new Laserbeam(lbX, lbY, lbWidth, lbHeight, lbColor, this.facing)
+              this.canFire = false
+              setTimeout(this.fireDelay.bind(this), this.fireRate)
+            }
+          } else if(this.facing == 'left') {
+            if(this.canFire) {
+              const offset = 4
+              const lbWidth = 20
+              const lbHeight = 7
+              const lbColor = "green"
+              const lbX = this.x - offset - lbWidth
+              const lbY = this.y + (this.height/2) - (lbHeight/2)
+              new Laserbeam(lbX, lbY, lbWidth, lbHeight, lbColor, this.facing)
+              this.canFire = false
+              setTimeout(this.fireDelay.bind(this), this.fireRate)
+            }
+          } else if(this.facing == 'right') {
+            if(this.canFire) {
+              const offset = 4
+              const lbWidth = 20
+              const lbHeight = 7
+              const lbColor = "green"
+              const lbX = this.x + this.width + offset
+              const lbY = this.y + (this.height/2) - (lbHeight/2)
+              new Laserbeam(lbX, lbY, lbWidth, lbHeight, lbColor, this.facing)
+              this.canFire = false
+              setTimeout(this.fireDelay.bind(this), this.fireRate)
+            }
+          }
           break
         }
       }.bind(this))
